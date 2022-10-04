@@ -17,7 +17,7 @@ class HomeLayout extends StatefulWidget {
 }
 
 final dbHelper = DatabaseHelper.instance;
-
+String s = "";
 
 class _HomeLayoutState extends State<HomeLayout> {
   double? heading = 0;
@@ -34,6 +34,7 @@ class _HomeLayoutState extends State<HomeLayout> {
   // done
   @override
   Widget build(BuildContext context) {
+    setString();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -53,7 +54,7 @@ class _HomeLayoutState extends State<HomeLayout> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            "${heading!.ceil()}°",
+            "${heading!}°",
             style: const TextStyle(
               fontSize: 18,
               color: Colors.white,
@@ -97,10 +98,11 @@ class _HomeLayoutState extends State<HomeLayout> {
                   'View saved bearings',
                   style: TextStyle(fontSize: 20.0),
                 ),
-                onPressed: () {Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const BearingsLayout()),
-                );
+                onPressed: () {
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const BearingsLayout()),
+                  );
                 }
               ),
               TextButton(
@@ -109,8 +111,19 @@ class _HomeLayoutState extends State<HomeLayout> {
                   style: TextStyle(fontSize: 20),
                 ),
                 onPressed: () {
-                  delete();
                   insert(heading!);
+                  setString();
+                  },
+                
+            ),
+             TextButton(
+                child: const Text(
+                  'Clear saved bearings', 
+                  style: TextStyle(fontSize: 20),
+                ),
+                onPressed: () {
+                  delete();
+                  s = "";
                   },
                 
             ),
@@ -128,20 +141,28 @@ void insert(bearing) async {
       DatabaseHelper.columnBearing : bearing,
       DatabaseHelper.columnDateTime  : DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
     };
-    final id = await dbHelper.insert(row);
-    print('inserted row id: $id');
+    dbHelper.insert(row);
   }
 
-  void query() async {
-    print('query all rows:');
-    final allRows = await dbHelper.queryAllRows();
-
-    allRows.forEach(print);
+  void setString() async {
+    s = "";
+    Future<List> queryResults =  dbHelper.getData();
+    List list = await queryResults ;
+    list.forEach((element) {s+=element.toString();});
   }
 
   void delete() async {
     // Assuming that the number of rows is the id for the last row.
-    print("run1");
-    final rowsDeleted = await dbHelper.delete();
+    dbHelper.delete();
     print('deleted all rows');
   }
+
+  void queryAll() async {
+    final allRows = await dbHelper.queryAllRows();
+    allRows.forEach(print);
+  }
+
+String getString(){
+  queryAll();
+  return s;
+}

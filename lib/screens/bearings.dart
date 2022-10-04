@@ -17,10 +17,20 @@ class _BearingsLayoutState extends State<BearingsLayout> {
         backgroundColor: Colors.black,
         title: const Text("My saved bearings", style: TextStyle(color: Colors.white,),),
       ),
-
-      //query();  
-
-      body: const Text("Another Page...!!!!!!", style: TextStyle(color: Colors.white,),),
-    );
+      body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+              getString(),
+              style: const TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          ]
+        )
+      );
   }
 }

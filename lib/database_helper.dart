@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_declarations
 
 import 'dart:io';
+import 'package:compass_app/screens/home.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -80,9 +81,17 @@ class DatabaseHelper {
 
   // Deletes the row specified by the id. The number of affected rows is
   // returned. This should be 1 as long as the row exists.
-  Future<int> delete() async {
-    print("run");
+  void delete() async {
     Database db = await instance.database;
-    return await db.rawDelete("Delete * from $table");
+    int? count = await queryRowCount();
+    await db.rawQuery("DELETE FROM $table");
+  }
+
+  // Deletes the row specified by the id. The number of affected rows is
+  // returned. This should be 1 as long as the row exists.
+  Future<List<Map<String, Object?>>> getData() async {
+    Database db = await instance.database;
+    int? count = await queryRowCount();
+    return await db.rawQuery("SELECT BEARING, DATE FROM $table");
   }
 }
