@@ -15,7 +15,7 @@ class _BearingsLayoutState extends State<BearingsLayout> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text("My saved bearings", style: TextStyle(color: Colors.white,),),
+        title: const Text("My saved bearings:", style: TextStyle(color: Colors.white,),),
       ),
       body: Column(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -54,7 +54,7 @@ class _HomeLayoutState extends State<HomeLayout> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            "${heading!}°",
+            "${heading!.toStringAsFixed(2)}°",
             style: const TextStyle(
               fontSize: 18,
               color: Colors.white,
@@ -111,7 +111,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                   style: TextStyle(fontSize: 20),
                 ),
                 onPressed: () {
-                  insert(heading!);
+                  insert(heading!.toStringAsFixed(2));
                   setString();
                   },
                 
@@ -122,8 +122,8 @@ class _HomeLayoutState extends State<HomeLayout> {
                   style: TextStyle(fontSize: 20),
                 ),
                 onPressed: () {
-                  delete();
                   s = "";
+                  delete();
                   },
                 
             ),
