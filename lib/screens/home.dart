@@ -21,6 +21,13 @@ String s = "";
 
 class _HomeLayoutState extends State<HomeLayout> {
   double? heading = 0;
+  
+  String getHeading(){
+    double? h = 360 - heading!;
+    if(h == 360){h = 0;}
+    String hString = "${h.toStringAsFixed(2)}°";
+    return hString;
+}
   @override
   void initState() {
     FlutterCompass.events!.listen((event) {
@@ -54,7 +61,7 @@ class _HomeLayoutState extends State<HomeLayout> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            "${heading!.toStringAsFixed(2)}°",
+            getHeading(),
             style: const TextStyle(
               fontSize: 18,
               color: Colors.white,
@@ -111,7 +118,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                   style: TextStyle(fontSize: 20),
                 ),
                 onPressed: () {
-                  insert(heading!.toStringAsFixed(2));
+                  insert(getHeading());
                   setString();
                   },
                 
@@ -139,7 +146,7 @@ void insert(bearing) async {
     // row to insert
     Map<String, dynamic> row = {
       DatabaseHelper.columnBearing : bearing,
-      DatabaseHelper.columnDateTime  : DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
+      DatabaseHelper.columnDateTime  : DateFormat('yyyy/MM/dd - kk:mm').format(DateTime.now()),
     };
     dbHelper.insert(row);
   }
@@ -148,7 +155,17 @@ void insert(bearing) async {
     s = "";
     Future<List> queryResults =  dbHelper.getData();
     List list = await queryResults ;
-    list.forEach((element) {s+=element.toString();});
+    list.forEach((element) {
+      String ogdata = element.toString();
+      final data = ogdata.split(",");
+      String bearing = data[0].substring(10, data[0].length-1);
+      print("br " + bearing);
+      final dateTime = data[1].split("-");
+      //.substring(6,ogdata.length-1).split("-");
+      String date = dateTime[0].substring(7,dateTime[0].length-1);
+      String time = dateTime[1].substring(1,dateTime[1].length-1);;
+      s+= "Bearing reccorded at $time on the $date was $bearing°\n";
+      });
   }
 
   void delete() async {
@@ -166,3 +183,5 @@ String getString(){
   queryAll();
   return s;
 }
+
+
